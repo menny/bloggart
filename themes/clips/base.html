@@ -1,0 +1,130 @@
+<!doctype html>
+<!--[if lt IE 7 ]> <html lang="en" class="no-js ie6"> <![endif]-->
+<!--[if IE 7 ]>    <html lang="en" class="no-js ie7"> <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" class="no-js ie8"> <![endif]-->
+<!--[if IE 9 ]>    <html lang="en" class="no-js ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>{% block title %}{{config.blog_name}}{% endblock %}</title>
+    <meta name="description" content="{{config.blog_name}} - {{config.slogan}}">
+    <meta name="author" content="{{config.author_name}}">
+
+    <link rel="alternate" type="application/atom+xml" 
+        href="{% if config.feed_proxy %}{{ config.feed_proxy }}{% else %}{{ config.url_prefix }}/feeds/atom.xml{% endif %}" />
+
+    <link rel="shortcut icon" href="{{ config.url_prefix }}/static/{{config.theme}}/icons/favicon.ico">
+    <link rel="shortcut icon" href="{{ config.url_prefix }}/favicon.ico">
+    <link rel="apple-touch-icon" href="{{ config.url_prefix }}/static/{{config.theme}}/icons/apple-touch-icon.png">
+    
+    <link href='http://fonts.googleapis.com/css?family=Neuton&subset=latin' rel='stylesheet' type='text/css'>
+    
+    <link rel="stylesheet" media="screen" href="{{ config.url_prefix }}/css/screen.css" />
+    <link rel="stylesheet" media="print" href="{{ config.url_prefix }}/css/print.css">
+    <link rel="stylesheet" media="handheld" href="{{ config.url_prefix }}/css/handheld.css">
+    {% if config.highlighting_style %}
+    <link rel="stylesheet" media="screen" href="{{ config.url_prefix }}/css/pygments/pygments_{{config.highlighting_style}}.css" />
+    {% endif %}
+    
+    <!--  <script src="{{ config.url_prefix }}/js/lib/modernizr-1.6.min.js"></script> -->
+    
+    {% block head %}{% endblock %}
+</head>
+
+<body>
+    <nav id="topnavbar">
+        <a href="{% if config.feed_proxy %}{{ config.feed_proxy }}{% else %}{{ config.url_prefix }}/feeds/atom.xml{% endif %}"><img id="feed" src="/static/{{ config.theme }}/icons/rss.png" /></a>
+		
+        <span id="internallinks" class="leftseparator">
+            <ul>
+                <li {% ifequal generator_class "IndexContentGenerator" %} class="current" {% endifequal %}>
+                    <a class="blogname" href="{{ config.url_prefix }}/">{{config.blog_name}}</a>
+                </li>
+				<li {% ifequal generator_class "ArchiveIndexContentGenerator" %} class="current" {% else %}
+					{% ifequal generator_class "ArchivePageContentGenerator" %} class="current" {% endifequal %}{% endifequal %}>
+				    <a href="{{ config.url_prefix }}/archive/">Archive</a>
+				</li>
+				{% if top_pages %}{% for tp in top_pages %}
+				    <li {% if page %}{% ifequal page.key tp.key %} class="current" {% endifequal %}{% endif %}>
+				    	<a href="{{ config.url_prefix }}{{ tp.path }}">{{ tp.title }}</a>
+					</li>
+				{% endfor %}{% endif %}
+            </ul>
+        </span><!-- end of #internallinks -->
+        
+        {% block menu %}{% endblock %}
+        
+        <span id="searchbox" class="leftseparator">
+            <form id="quick-search" action="{{ config.url_prefix }}/search" method="get">
+                <input type="hidden" name="cref" value="http://{{config.host}}{{ config.url_prefix }}/cse.xml" />
+                <input type="hidden" name="cof" value="FORID:11" />
+                <input type="hidden" name="ie" value="UTF-8" />
+                <input class="sanstypeface" type="text" placeholder="Search" name="q" />
+				<input type="image" src="/static/{{ config.theme }}/icons/search.png" />
+            </form>
+        </span><!-- end of #searchbox -->
+        
+        <span id="links">
+            <ul>
+                <li class="text">more of me</li>
+				<li class="text">@</li>                
+                {% for links in config.sidebar_links %}
+                    {% for link in links.1 %}
+                        <li><a rel="{{ link.rel }}" href="{{ link.url }}" target="{{ link.target }}">{{ link.title }}</a></li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </span><!-- end of #links -->
+    </nav><!-- end of #topnavbar -->
+   
+    <div id="container">
+        {% block body %}{% endblock %}
+    </div> <!-- end of #container -->
+
+	<footer id="bottomfooter" class="fancy">
+		&laquo; {{ config.slogan }} &raquo;
+	</footer>
+
+	<footer id="credits" class="fancy">
+		Hosted by <a href="http://code.google.com/appengine/" target="_blank">App Engine</a> &amp;
+        Powered by <a href="https://github.com/detro/bloggart" target="_blank">Bloggart</a>
+		<br />
+		<a href="http://www.w3.org/html/logo/" alt="HTML5 Powered with CSS3 / Styling, and Semantics" target="_blank">
+			<img src="/static/{{ config.theme }}/html5_semantics.png" title="HTML5 Semantics" />
+			<img src="/static/{{ config.theme }}/html5_logo.png" title="HTML5" />
+			<img src="/static/{{ config.theme }}/html5_styling.png" title="HTML5 CSS3 / Styling" />
+		</a>
+		<br />
+		<a href="{{ config.url_prefix }}/">Blog</a>
+		&sim;
+		<a href="{{ config.url_prefix }}/archive/">Archive</a>
+        &sim;
+		<a href="{% if config.feed_proxy %}{{ config.feed_proxy }}{% else %}{{ config.url_prefix }}/feeds/atom.xml{% endif %}">Atom</a>
+        &sim;
+        <a href="{{ config.url_prefix }}/admin/">Admin</a>
+	</footer><!-- end of footer#credits -->
+
+    <script src="{{ config.url_prefix }}/js/base.js"></script>
+
+    <!--[if lt IE 7 ]>
+    <script src="{{ config.url_prefix }}/js/lib/dd_belatedpng.js"></script>
+    <script> DD_belatedPNG.fix('img, .png_bg'); </script>
+    <![endif]-->
+
+    {% if config.analytics_id and not devel and not is_admin %}
+    <!-- Asynchronous Google Analytics library loading -->
+    <script>
+        var _gaq = [['_setAccount', '{{config.analytics_id}}'], ['_trackPageview']];
+        (function(d, t) {
+            var g = d.createElement(t),
+                s = d.getElementsByTagName(t)[0];
+            g.async = true;
+            g.src = ('https:' == location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            s.parentNode.insertBefore(g, s);
+        })(document, 'script');
+    </script>
+    {% endif %}
+</body>
+</html>
