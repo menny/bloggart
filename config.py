@@ -33,7 +33,7 @@ post_path_format = '/%(year)d/%(month)02d/%(slug)s'
 # For more complex/versatile scenarios, just edit the theme directly.
 sidebar_links = [
   ('Other myselfs', [
-    { 'title' : 'G+', 'url' : 'https://plus.google.com/u/0/100465343617945336905/posts', 'target' : '_blank', 'rel' : 'bookmark' },
+    { 'title' : 'G+', 'url' : 'http://s.evendanan.net/gplus', 'target' : '_blank', 'rel' : 'bookmark' },
     { 'title' : 'github', 'url' : 'https://github.com/menny', 'target' : '_blank', 'rel' : 'bookmark' },
     { 'title' : 'CV', 'url' : 'http://www.evendanan.net/', 'target' : '_blank', 'rel' : 'bookmark' }
   ]),
